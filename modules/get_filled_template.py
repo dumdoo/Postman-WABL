@@ -53,7 +53,7 @@ def preview_template():
     with open(CONFIG["email-content"]["template"], "rt") as text_template:
         with open(CONFIG["email-content"]["base-template"], "rt") as base_template:
             mjml = base_template.read().replace(
-                "{{text}}", "\n".join(text_template.read().splitlines[1:])
+                "{{text}}", "\n".join(text_template.read().splitlines()[1:])
             )
 
         resp = re.post(

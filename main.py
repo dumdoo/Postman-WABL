@@ -3,7 +3,13 @@ import re
 from pandas import read_csv
 
 from modules.config import CONFIG
-from modules.logger import ask_for_start, init_email_task, intial_logging, log
+from modules.logger import (
+    ask_for_start,
+    init_email_task,
+    intial_logging,
+    log,
+    show_template,
+)
 from modules.send_email import send_email
 
 
@@ -34,6 +40,7 @@ def main():
             is None
         ):
             raise ValueError(f"Missing or malformed email address at row {i+1}")
+    show_template()
     ask_for_start()
     init_email_task(len(people))
     for i, person in people.iterrows():

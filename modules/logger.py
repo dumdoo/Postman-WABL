@@ -10,6 +10,8 @@ from rich.logging import RichHandler
 from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn, TimeElapsedColumn
 from rich.prompt import Confirm
 
+from .get_filled_template import preview_template
+
 if not os.path.isdir("./logs"):
     os.mkdir("./logs")
 
@@ -80,3 +82,8 @@ def intial_logging(
 def ask_for_start():
     if not Confirm.ask("Proceed?"):
         raise SystemExit
+
+
+def show_template():
+    if Confirm.ask("Show template?"):
+        preview_template()
