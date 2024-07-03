@@ -40,6 +40,8 @@ def create_message(name: str, target_email: str) -> dict[str, str]:
         msg.attach(img)
 
     msg["from"] = CONFIG["sender"]["email-address"]
+    msg["cc"] = CONFIG["email-content"]["cc"]
+    msg["bcc"] = CONFIG["email-content"]["bcc"]
     msg["subject"] = subject
     msg["to"] = target_email
     encoded_message = base64.urlsafe_b64encode(
@@ -75,6 +77,5 @@ def send_email(name: str, target_email: str) -> None:
     service = get_gmail_service()
     service.users().messages().send(
         userId="me", body=create_message(name, target_email)
-    )  # .execute()
-
+    ).execute()
     on_email_sent(name, target_email)

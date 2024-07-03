@@ -43,7 +43,6 @@ def main():
         name, email = person.Name, person.Email
         name = name.strip().title()
         email = email.strip().lower()
-
         send_email(name, email)
 
 

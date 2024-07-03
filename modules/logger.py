@@ -22,15 +22,16 @@ for log in os.listdir("./logs"):
 n += 1
 
 FORMAT = "%(message)s"
-logging.getLogger(__name__).basicConfig(
+logging.basicConfig(
     level=logging.INFO,
     format=FORMAT,
     datefmt="[%X]",
     handlers=[
-        RichHandler(markup=False),
+        RichHandler(markup=True),
         logging.FileHandler(f"./logs/log-{n}.log"),
     ],
 )
+logging.getLogger("googleapiclient.discovery_cache").setLevel(logging.ERROR)
 log = logging.getLogger("rich")
 
 

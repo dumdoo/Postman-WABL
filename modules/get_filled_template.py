@@ -41,11 +41,14 @@ def get_filled_template(name: str) -> EmailTemplate:
         )
         resp.raise_for_status()
         html_template = resp.json()["html"]
-        template = EmailTemplate(html_template.replace("{{name}}", name), subject)
-    return template
+        template = EmailTemplate(html_template, subject)
+
+    return EmailTemplate(
+        template.html_template.replace("{{name}}", name), template.subject
+    )
 
 
-def template_to_html():
+def preview_template():
     """Saves a template to disk"""
     with open(CONFIG["email-content"]["template"], "rt") as text_template:
         with open(CONFIG["email-content"]["base-template"], "rt") as base_template:
@@ -69,4 +72,4 @@ def template_to_html():
 
 
 if __name__ == "__main__":
-    template_to_html()
+    preview_template()
