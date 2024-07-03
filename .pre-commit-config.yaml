@@ -22,11 +22,3 @@ repos:
       rev: "5.13.2"
       hooks:
           - id: isort
-
-    - repo: https://gitlab.com/brettops/tools/badgie
-      rev: "0.9.0"
-      hooks:
-          - id: badgie
-            args:
-                # - -w=README.md
-                - -s=for-the-badge
