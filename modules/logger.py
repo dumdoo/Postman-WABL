@@ -4,7 +4,9 @@ import os.path
 from pathlib import Path
 from time import sleep, strftime
 
-import pandas
+import rich
+import rich.align
+import rich.table
 from rich import print
 from rich.logging import RichHandler
 from rich.progress import MofNCompleteColumn, Progress, SpinnerColumn, TimeElapsedColumn
@@ -29,7 +31,10 @@ logging.basicConfig(
     format=FORMAT,
     datefmt="[%X]",
     handlers=[
-        RichHandler(markup=True),
+        RichHandler(
+            markup=True,
+            rich_tracebacks=True,
+        ),
         logging.FileHandler(f"./logs/log-{n}.log"),
     ],
 )
@@ -64,19 +69,46 @@ def on_email_sent(name: str, email: str):
 def intial_logging(
     template_name: str,
     base_template_name: str,
-    email_data: pandas.DataFrame,
+    data: list[tuple[str, str]],
     email_file: str,
 ):
-    log.info(f"Using Template '{template_name}' with base '{base_template_name}'")
-    log.info(f"{len(email_data)} non-header rows found in {email_file}")
-    if len(email_data) <= 7:
-        print(email_data)
+    log.info(f"Using template '{template_name}' with base '{base_template_name}'")
+    log.info(f"{len(data)} rows found in {email_file} (count does not include header)")
+
+    if len(data) <= 7:
+        data_w_row_n = [
+            (str(i + 1), name, email) for i, (name, email) in enumerate(data)
+        ]
     else:
-        print(email_data.head(3), end="\n...\n")
-        print(
-            email_data.tail(3).to_string(header=None),
-            end="\n\n",
-        )
+        data_w_row_n = []
+
+        for i, (name, email) in enumerate(data[:3]):  # add first 3
+            data_w_row_n.append((str(i + 1), name, email))
+
+        data_w_row_n.append(("...", "...", "..."))  # add gap
+
+        for i, (name, email) in enumerate(data[-3:]):  # add last 3
+            row_number = str((i + 1 + len(data)) - 3)
+            data_w_row_n.append((row_number, name, email))
+    data_w_row_n: list[tuple[str, str, str]]
+
+    preview_table = rich.table.Table(
+        "n",
+        "Name",
+        "Email",
+        title=f"Preview of {email_file}",
+        box=rich.box.MINIMAL,
+        # expand=True,
+        highlight=True,
+        title_style="bold red",
+        style="cornsilk1",
+        header_style="bold chartreuse1",
+        row_styles=["pale_turquoise1", "purple"],
+    )
+    for n, name, email in data_w_row_n:
+        preview_table.add_row(n, name, email)
+    print("\n")
+    print(rich.align.Align(preview_table, align="center"))
 
 
 def ask_for_start():
