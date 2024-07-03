@@ -1,0 +1,50 @@
+<mjml>
+  <mj-head>
+
+    <mj-breakpoint width="480px" />
+
+    <mj-font name="EB Garamond"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;1,500&display=swap" />
+    <mj-attributes>
+
+      <mj-all font-family="EB Garamond" />
+      <mj-text font-size="14px" />
+      <mj-text color="#000000" />
+      <mj-text line-height="24px" />
+
+    </mj-attributes>
+  </mj-head>
+<mj-body width="360px" background-color="#E1E8ED">
+    <mj-section padding="0px" text-align="left">
+      <mj-column>
+        <mj-image align="center" width="160px" height="160px" padding="0px" container-background-color="#640c0b" src="cid:1"></mj-image>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0px" text-align="left">
+      <mj-column>
+        <mj-text font-family="EB Garamond" font-weight="400" align="left" padding="25px 25px 25px 25px" font-style="normal" font-family="Georgia" font-weight="600" container-background-color="#ffffff">
+          <div>Dear {{name}},</div>
+          <div><br></div>
+          <div>
+
+            Thank you for registering for KGSMUN 2024. To complete your registration, please submit a payment of Rs. 2750 to the Student Experience Office (SEO) on Monday, 8th July.</div>
+          <div>The SEO is open for payment from 8:00 AM to 2:00 PM</div>
+          <div><br></div>
+          <div>In case of any queries, please do not hesitate to reply to this email.&nbsp;</div>
+          <div><br><div>
+          <div>Sincerely,&nbsp;</div>
+          <div>The&nbsp;KGSMUN&nbsp;Team.</div>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0px" text-align="left">
+      <mj-column>
+        <mj-social  align="center" color="#ffffff" mode="horizontal" font-size="10px" font-weight="normal" border-radius="3px" icon-padding="16px" padding="8px 25px 8px 25px" inner-padding="0px 16px 0px 16px" line-height="24px" icon-size="24px" container-background-color="#640c0b">
+          <mj-social-element href="https://instagram.com/kgsmun/" target="_blank" src="cid:2"> </mj-social-element>
+
+          <mj-social-element href="https://facebook.com/kgsmun/" target="_blank" src="cid:3"></mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,0 +1,11 @@
+[sender]
+email-address = ...
+
+[email-content]
+template = "./templates/Internal Payment.mjml"
+base-template = "./templates/base.mjml"
+targets-file = ...             # CSV File
+
+[mjml-api]
+application-id = ...
+secret-key = ...
