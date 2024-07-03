@@ -3,6 +3,7 @@ logs/
 config.toml
 data/
 .temp.html
+credentials.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
