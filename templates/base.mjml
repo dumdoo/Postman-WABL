@@ -33,8 +33,8 @@
     <mj-section padding="0px" text-align="left">
       <mj-column>
         <mj-social css-class="munred" align="center" mode="horizontal" font-size="10px" font-weight="normal" border-radius="3px" icon-padding="16px" padding="8px 10px 8px 10px" inner-padding="0px 16px 0px 16px" icon-size="24px">
-          <mj-social-element href="https://instagram.com/kgsmun/" target="_blank" src="cid:2"> </mj-social-element>
-          <mj-social-element href="https://facebook.com/kgsmun/" target="_blank" src="cid:3"></mj-social-element>
+          <mj-social-element href="http://example.com/" target="_blank" src="cid:2"> </mj-social-element>
+          <mj-social-element href="http://example.com/" target="_blank" src="cid:3"></mj-social-element>
         </mj-social>
       </mj-column>
     </mj-section>
