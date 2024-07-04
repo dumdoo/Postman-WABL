@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "KGSMUN Email Sender"
-version = "0.1.0"
+name = "Postman-WABL"
+version = "1.0.0"
 description = ""
-authors = ["Rohail Faisal <r.baloch12832@kgs.edu.pk>"]
+authors = ["Rohail Faisal <rohailfaisal14@gmail.com>"]
 license = "GPL-3.0-only"
 readme = "README.md"
 package-mode = false
