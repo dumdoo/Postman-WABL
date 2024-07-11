@@ -35,3 +35,7 @@ Sends automated, beautiful, bodged emails en masse!
 The project uses [jinja](https://jinja.palletsprojects.com/en/3.1.x/) and [MJML](https://mjml.io/).
 
 The sub-template must have a subject line present in it as follows `{# Subject: Subject Here #}` (as you can guess, this is how you specify your email's subject). All jinja placeholder variables are populated. Ensure that all jinja code is escaped. If you fail to escape, your template will break.
+
+## Known Bugs
+
+The preview feature does not work at this moment.
