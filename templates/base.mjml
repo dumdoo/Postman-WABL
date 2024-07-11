@@ -16,6 +16,8 @@
       :root {
     color-scheme: light;}
     </mj-style>
+    {% block head %}
+    {% endblock %}
   </mj-head>
 <mj-body width="600px" background-color="#F5F5F5">
     <mj-section padding="0px" text-align="left">
@@ -26,7 +28,8 @@
     <mj-section padding="0px" text-align="left">
       <mj-column>
         <mj-text container-background-color="#ffffff" font-family="EB Garamond" font-weight="400" align="left" padding="25px 25px 25px 25px" font-style="normal" font-family="Georgia" font-weight="600">
-            {{text}}
+            {% block _body required %}
+            {% endblock %}
         </mj-text>
       </mj-column>
     </mj-section>

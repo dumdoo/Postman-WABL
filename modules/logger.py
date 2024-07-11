@@ -2,7 +2,7 @@ import logging
 import os
 import os.path
 from pathlib import Path
-from time import sleep, strftime
+from time import strftime
 
 import rich
 import rich.align
@@ -58,18 +58,18 @@ def init_email_task(total_emails_to_be_sent: int):
     progress.start()
 
 
-def on_email_sent(name: str, email: str):
+def on_email_sent(email: str):
     progress.advance(email_send_task)
-    log.info(f"[green][{strftime('%H:%M:%S')}]\t[blue]Sent to [i]{name} - [red]{email}")
+    log.info(f"[green][{strftime('%H:%M:%S')}]\t[blue]Sent to [red]{email}")
     if progress.finished:
-        sleep(0.1)  # Keep process alive so bar can update to 100%
+        progress.refresh()
         log.info("[green]Done!")
 
 
-def intial_logging(
+def initial_logging(
     template_name: str,
     base_template_name: str,
-    data: list[tuple[str, str]],
+    data: list[dict[str, str]],
     email_file: str,
 ):
     log.info(f"Using template '{template_name}' with base '{base_template_name}'")
@@ -77,25 +77,24 @@ def intial_logging(
 
     if len(data) <= 7:
         data_w_row_n = [
-            (str(i + 1), name, email) for i, (name, email) in enumerate(data)
+            (str(i + 1), *person_data.values()) for i, person_data in enumerate(data)
         ]
     else:
         data_w_row_n = []
 
-        for i, (name, email) in enumerate(data[:3]):  # add first 3
-            data_w_row_n.append((str(i + 1), name, email))
+        for i, person_data in enumerate(data[:3]):  # add first 3
+            data_w_row_n.append((str(i + 1), *person_data.values()))
 
         data_w_row_n.append(("...", "...", "..."))  # add gap
 
-        for i, (name, email) in enumerate(data[-3:]):  # add last 3
+        for i, person_data in enumerate(data[-3:]):  # add last 3
             row_number = str((i + 1 + len(data)) - 3)
-            data_w_row_n.append((row_number, name, email))
+            data_w_row_n.append((row_number, *person_data.values()))
     data_w_row_n: list[tuple[str, str, str]]
 
     preview_table = rich.table.Table(
         "n",
-        "Name",
-        "Email",
+        *data[0].keys(),
         title=f"Preview of {email_file}",
         box=rich.box.MINIMAL,
         # expand=True,
@@ -105,8 +104,8 @@ def intial_logging(
         header_style="bold chartreuse1",
         row_styles=["pale_turquoise1", "purple"],
     )
-    for n, name, email in data_w_row_n:
-        preview_table.add_row(n, name, email)
+    for d in data_w_row_n:
+        preview_table.add_row(*d)
     print("\n")
     print(rich.align.Align(preview_table, align="center"))
 
@@ -118,4 +117,7 @@ def ask_for_start():
 
 def show_template():
     if Confirm.ask("Show template?"):
-        preview_template()
+        try:
+            preview_template()
+        except AttributeError as e:
+            log.warning(e, exc_info=True)

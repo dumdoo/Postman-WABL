@@ -1,50 +1,56 @@
 import os
+import re
 from dataclasses import dataclass
 
-import requests as re
+import jinja2 as jinja
+import requests
 from requests.auth import HTTPBasicAuth
 
 from .config import CONFIG
 
 
-@dataclass
+@dataclass(frozen=True)
 class EmailTemplate:
     html_template: str
     subject: str
 
 
-template: EmailTemplate = None  # Used to cache template
+SUBJECT_REGEX = re.compile(
+    r"{#\s*(.*?)\s*:\s*(?<subject>.*?)\s*#}", flags=re.IGNORECASE
+)
+jinja_env = jinja.Environment(loader=jinja.BaseLoader)
+file_templates: list[dict[str, EmailTemplate]] = None  # Used to cache template
 
 
-def get_filled_template(name: str) -> EmailTemplate:
+def get_filled_template(data: dict[str, str]) -> EmailTemplate:
     """Populates a template with information and returns it as a EmailTemplate"""
-    global template  # Not usually a great idea but I can't be bothered
+    global file_templates
 
-    # Check if template is cached, if not, create one by merging the base template, and the target template, and then use MJML api to convert to HTML.
-    if template is None:
+    # Check if template is cached, if not, create one by merging the base template and the partial template, and then use MJML api to convert to HTML.
+    template_path = CONFIG["email-content"]["template"]
 
-        with open(CONFIG["email-content"]["template"], "rt") as text_template_f:
-            text_template = text_template_f.read()
-            subject = (
-                text_template.splitlines()[0].split("SUBJ:", maxsplit=1)[1].strip()
-            )
-            text_template = "\n".join(text_template.splitlines()[1:])
-            with open("./templates/base.mjml", "rt") as base_template_f:
-                mjml = base_template_f.read().replace("{{text}}", text_template)
+    if template_path not in file_templates:
+        with open(CONFIG["email-content"]["template"], "rt") as partial_template_f:
+            partial_template = partial_template_f.read()
+            subject_match = SUBJECT_REGEX.match(partial_template)
+            if subject_match is None:
+                raise ValueError("No subject found in template file.")
+            subject = subject_match.group("subject")
+            partial_template = jinja_env.from_string(partial_template).render()
 
-        resp = re.post(
+        resp = requests.post(
             "https://api.mjml.io/v1/render",
             auth=HTTPBasicAuth(
                 CONFIG["mjml-api"]["application-id"], CONFIG["mjml-api"]["secret-key"]
             ),
-            json={"mjml": mjml},
+            json={"mjml": partial_template},
         )
         resp.raise_for_status()
         html_template = resp.json()["html"]
-        template = EmailTemplate(html_template, subject)
-
+        file_templates.append({template_path, EmailTemplate(html_template, subject)})
+    template: EmailTemplate = file_templates[template_path]
     return EmailTemplate(
-        template.html_template.replace("{{name}}", name), template.subject
+        jinja_env.from_string(template.html_template).render(data), template.subject
     )
 
 
@@ -56,7 +62,7 @@ def preview_template():
                 "{{text}}", "\n".join(text_template.read().splitlines()[1:])
             )
 
-        resp = re.post(
+        resp = requests.post(
             "https://api.mjml.io/v1/render",
             auth=HTTPBasicAuth(
                 CONFIG["mjml-api"]["application-id"], CONFIG["mjml-api"]["secret-key"]
@@ -68,7 +74,12 @@ def preview_template():
 
         with open(".temp.html", "wt") as f:
             f.write(template)
-            os.startfile(".temp.html")
+            try:
+                os.startfile(".temp.html")
+            except AttributeError as e:
+                raise AttributeError(
+                    "os.startfile unsupported by system. Please open .temp.html (locatated in the cwd) to preview template"
+                ) from e
 
 
 if __name__ == "__main__":

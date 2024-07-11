@@ -18,13 +18,13 @@ from .logos import Logos
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 
-def create_message(name: str, target_email: str) -> dict[str, str]:
+def create_message(data: dict[str, str]) -> dict[str, str]:
     """Returns the raw data to be used as the email"""
 
     msg = MIMEMultipart(_subtype="related")  # Multipart contains HTML content + images
 
     # Set HTML body and attach it
-    email_template = get_filled_template(name)
+    email_template = get_filled_template(data)
     html_template, subject = email_template.html_template, email_template.subject
     body = MIMEText(html_template, _subtype="html")
     msg.attach(body)
@@ -43,7 +43,7 @@ def create_message(name: str, target_email: str) -> dict[str, str]:
     msg["cc"] = CONFIG["email-content"]["cc"]
     msg["bcc"] = CONFIG["email-content"]["bcc"]
     msg["subject"] = subject
-    msg["to"] = target_email
+    msg["to"] = data["email"]
     encoded_message = base64.urlsafe_b64encode(
         msg.as_bytes()
     ).decode()  # Convert MIME Object to text representation (in bytes), then b64 encode those bytes, and convert back to a b64 encoded string
@@ -73,9 +73,8 @@ def get_gmail_service() -> DiscoveryResource:
     return service
 
 
-def send_email(name: str, target_email: str) -> None:
+def send_email(data: dict[str, str]) -> None:
+    target_email = data["email"]
     service = get_gmail_service()
-    service.users().messages().send(
-        userId="me", body=create_message(name, target_email)
-    ).execute()
-    on_email_sent(name, target_email)
+    service.users().messages().send(userId="me", body=create_message(data)).execute()
+    on_email_sent(target_email)

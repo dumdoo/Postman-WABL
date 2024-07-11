@@ -1,15 +1,15 @@
 [sender]
-email-address = ...
+email-address = "..."
 
 [email-content]
-template = ...
-base-template = ...
-targets-file = ... # CSV File
+template = "..."
+base-template = "..."
+targets-file = "..." # CSV File
 
 # Comma-seperated, no spaces
-cc = ...
-bcc = ...
+cc = "..."
+bcc = "..."
 
 [mjml-api]
-application-id = ...
-secret-key = ...
+application-id = "..."
+secret-key = "..."
