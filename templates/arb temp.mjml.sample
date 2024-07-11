@@ -1,0 +1,12 @@
+{# Subject:Complete Registration #}
+{% extends "base.mjml" %}
+{% block body %}
+<div>Dear {{ '{{name}}' }},</div>
+<div><br></div>
+<div>
+Thank you for registering. To complete your registration, please submit a payment of 2750 on Monday, 8th July.</div>
+<div><br></div>
+<div>In case of any queries, please do not hesitate to reply to this email.&nbsp;</div>
+<div><br></div>
+<div>Warm regards.&nbsp;</div>
+{% endblock %}

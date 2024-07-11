@@ -2,7 +2,8 @@ import os
 import re
 from dataclasses import dataclass
 
-import jinja2 as jinja
+import jinja2
+import jinja2.meta
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -16,7 +17,7 @@ class EmailTemplate:
 
 
 SUBJECT_REGEX = re.compile(r"{#\s*(.*?)\s*:\s*(.*?)\s*#}", flags=re.IGNORECASE)
-jinja_env = jinja.Environment(loader=jinja.FileSystemLoader("templates"))
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 file_templates: dict[str, EmailTemplate] = {}  # Used to cache template
 
 
@@ -46,6 +47,17 @@ def get_filled_template(data: dict[str, str]) -> EmailTemplate:
         resp.raise_for_status()
         html_template = resp.json()["html"]
         file_templates[template_path] = EmailTemplate(html_template, subject)
+
+    placeholder_vars = jinja2.meta.find_undeclared_variables(
+        jinja_env.parse(html_template)
+    )
+    for placeholder in placeholder_vars:
+        if placeholder not in data:
+            raise ValueError(f"{placeholder} header not present")
+    for header in data:
+        if header not in placeholder_vars:
+            raise Warning(f"Unused header {header}")
+
     template: EmailTemplate = file_templates[template_path]
     return EmailTemplate(
         jinja_env.from_string(template.html_template).render(data), template.subject

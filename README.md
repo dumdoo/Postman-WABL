@@ -22,7 +22,7 @@ Sends automated, beautiful, bodged emails en masse!
 5. Get credentials for a [Google Cloud Project](https://developers.google.com/workspace/guides/create-project) with the `gmail.send` scope. Save it as `credentials.json`
 6. Update your `config.toml` with all of your information
 7. Run `poetry install` in the project directory (use `poetry install --with dev` for development)
-8. Finally, `poetry run main.py`!
+8. Finally, `poetry run python main.py`!
 
 ## Details
 
@@ -32,8 +32,6 @@ Sends automated, beautiful, bodged emails en masse!
 
 ## How templating works
 
-There are 2 types of template files here. A _base_ template. And a _sub-template_ template. The sub-template is injected into the base templates's `{{text}}` placeholder.
-The sub-template must contain tags that can be rendered in MJML's [`mj-body`](https://documentation.mjml.io/#mj-body) tag.
+The project uses [jinja](https://jinja.palletsprojects.com/en/3.1.x/) and [MJML](https://mjml.io/).
 
-The sub-template must start with `SUBJ:<Email Subject>\n` (as you can guess, this is how you specify your email's subject. This line is _not_ injected into the base template)
-Once the sub-template is injected into the base template, `{{name}}` is replaced with the provided name
+The sub-template must have a subject line present in it as follows `{# Subject: Subject Here #}` (as you can guess, this is how you specify your email's subject). All jinja placeholder variables are populated. Ensure that all jinja code is escaped. If you fail to escape, your template will break.

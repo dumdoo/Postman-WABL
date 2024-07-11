@@ -1,0 +1,30 @@
+<mjml>
+  <mj-head>
+
+    <mj-breakpoint width="480px" />
+
+    <mj-font name="EB Garamond"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;1,500&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="EB Garamond" />
+      <mj-text font-size="14px" />
+      <mj-text color="#000000" />
+      <mj-text line-height="24px" />
+    </mj-attributes>
+
+    {% block head %}
+    {% endblock %}
+  </mj-head>
+<mj-body width="600px" background-color="#F5F5F5">
+    <mj-section padding="0px" text-align="left">
+      <mj-column>
+        <mj-text container-background-color="#ffffff" font-family="EB Garamond" font-weight="400" align="left" padding="25px 25px 25px 25px" font-style="normal" font-family="Georgia" font-weight="600">
+            {% block _body required %}
+            {% endblock %}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="0px" text-align="left">
+    </mj-section>
+  </mj-body>
+</mjml>
