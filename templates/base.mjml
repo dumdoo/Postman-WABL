@@ -28,7 +28,7 @@
     <mj-section padding="0px" text-align="left">
       <mj-column>
         <mj-text container-background-color="#ffffff" font-family="EB Garamond" font-weight="400" align="left" padding="25px 25px 25px 25px" font-style="normal" font-family="Georgia" font-weight="600">
-            {% block _body required %}
+            {% block body required %}
             {% endblock %}
         </mj-text>
       </mj-column>

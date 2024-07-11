@@ -15,11 +15,9 @@ class EmailTemplate:
     subject: str
 
 
-SUBJECT_REGEX = re.compile(
-    r"{#\s*(.*?)\s*:\s*(?<subject>.*?)\s*#}", flags=re.IGNORECASE
-)
-jinja_env = jinja.Environment(loader=jinja.BaseLoader)
-file_templates: list[dict[str, EmailTemplate]] = None  # Used to cache template
+SUBJECT_REGEX = re.compile(r"{#\s*(.*?)\s*:\s*(.*?)\s*#}", flags=re.IGNORECASE)
+jinja_env = jinja.Environment(loader=jinja.FileSystemLoader("templates"))
+file_templates: dict[str, EmailTemplate] = {}  # Used to cache template
 
 
 def get_filled_template(data: dict[str, str]) -> EmailTemplate:
@@ -35,7 +33,7 @@ def get_filled_template(data: dict[str, str]) -> EmailTemplate:
             subject_match = SUBJECT_REGEX.match(partial_template)
             if subject_match is None:
                 raise ValueError("No subject found in template file.")
-            subject = subject_match.group("subject")
+            subject = subject_match.group(2)
             partial_template = jinja_env.from_string(partial_template).render()
 
         resp = requests.post(
@@ -47,7 +45,7 @@ def get_filled_template(data: dict[str, str]) -> EmailTemplate:
         )
         resp.raise_for_status()
         html_template = resp.json()["html"]
-        file_templates.append({template_path, EmailTemplate(html_template, subject)})
+        file_templates[template_path] = EmailTemplate(html_template, subject)
     template: EmailTemplate = file_templates[template_path]
     return EmailTemplate(
         jinja_env.from_string(template.html_template).render(data), template.subject
