@@ -1,7 +1,8 @@
+templates/*
 token.json
 logs/
 config.toml
-data/
+data/*
 .temp.html
 credentials.json
 
